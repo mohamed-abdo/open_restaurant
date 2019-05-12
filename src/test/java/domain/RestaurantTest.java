@@ -1,4 +1,4 @@
-package resturant;
+package domain;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +12,8 @@ import utils.CSVContent;
 
 import java.io.IOException;
 
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {RestaurantTest.class})
+@ExtendWith(SpringExtension.class)
 class RestaurantTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantTest.class);
 
@@ -23,7 +22,7 @@ class RestaurantTest {
 
     public RestaurantTest(@Value("classpath:rest_hours.csv") Resource csvFile) throws IOException {
         this.csvFile = csvFile;
-        this.csvContent = CSVContent.getInstance(csvFile.getURL().getPath());
+        this.csvContent = CSVContent.getInstance(csvFile.getFile().getPath());
     }
 
     @BeforeAll
