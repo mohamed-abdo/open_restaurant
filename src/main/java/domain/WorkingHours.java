@@ -17,7 +17,7 @@ public class WorkingHours {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingHours.class);
     private final String timeFormat = "h[:m] a";//with optional minutes
 
-    public HashMap<DayOfWeek, Duration> calcWorkingHours(@NonNull String timeInStr) {
+    public Duration calcWorkingHours(@NonNull String timeInStr) {
         Objects.requireNonNull(timeInStr);
         String[] timeSplit = timeInStr.toUpperCase().split("-");//in case am | pm will be in CAPS
         if (timeSplit.length == 1)
@@ -29,10 +29,8 @@ public class WorkingHours {
         if (fromTimeSplit.length == 1)
             throw new IllegalArgumentException(String.format("invalid working hours format. %s", timeInStr));
 
-        var workingDay = new HashMap<DayOfWeek, Duration>();
-        workingDay.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.parse(fromTimeStr, DateTimeFormatter.ofPattern(timeFormat)),
-                LocalTime.parse(toTimeInStr, DateTimeFormatter.ofPattern(timeFormat))));
-        return workingDay;
+        return Duration.between(LocalTime.parse(fromTimeStr, DateTimeFormatter.ofPattern(timeFormat)),
+                LocalTime.parse(toTimeInStr, DateTimeFormatter.ofPattern(timeFormat)));
     }
 
 }

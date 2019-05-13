@@ -8,10 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.HashMap;
 
 @SpringBootTest(classes = {WorkingHoursTest.class})
 @ExtendWith(SpringExtension.class)
@@ -23,8 +21,7 @@ public class WorkingHoursTest {
 
     @Test
     void test_calcWorkingHours() {
-        var workingDay = new HashMap<DayOfWeek, Duration>();
-        workingDay.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(21, 00)));
-        Assertions.assertEquals(workingDay, workingHours.calcWorkingHours("11:30 am - 9 pm"));
+        var duration = Duration.between(LocalTime.of(11, 30), LocalTime.of(21, 00));
+        Assertions.assertEquals(duration, workingHours.calcWorkingHours("11:30 am - 9 pm"));
     }
 }
