@@ -1,5 +1,7 @@
-package domain;
+package domain.service;
 
+import domain.service.WorkingDays;
+import domain.service.WorkingHours;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

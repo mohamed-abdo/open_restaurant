@@ -1,4 +1,4 @@
-package domain;
+package domain.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class WorkingSheet {
     private WorkingHours workingHours;
 
 
-    public Map<DayOfWeek, Duration> parseWorkingSheet(@NonNull String workingSheetStr) {
+    private Map<DayOfWeek, Duration> innerParseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);
@@ -43,12 +43,12 @@ public class WorkingSheet {
         return workingDays.parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
     }
 
-    public Map<DayOfWeek, Duration> parseWorkingFullSheet(@NonNull String workingSheetStr) {
+    public Map<DayOfWeek, Duration> parseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);
         return Arrays.stream(workingSheetStr.split("/"))
-                .map(this::parseWorkingSheet)
+                .map(this::innerParseWorkingSheet)
                 .reduce(new HashMap<>(), (a, b) -> {
                     a.putAll(b);
                     return a;

@@ -1,5 +1,8 @@
-package domain;
+package domain.service;
 
+import domain.service.WorkingDays;
+import domain.service.WorkingHours;
+import domain.service.WorkingSheet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +43,7 @@ class WorkingSheetTest {
         workingSheetMap.put(DayOfWeek.FRIDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(23, 0)));
         workingSheetMap.put(DayOfWeek.SATURDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(23, 0)));
         workingSheetMap.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(16, 30), LocalTime.of(22, 30)));
-        var result = workingSheet.parseWorkingFullSheet(workingSheetStr);
+        var result = workingSheet.parseWorkingSheet(workingSheetStr);
         assertEquals(workingSheetMap, result);
     }
 }

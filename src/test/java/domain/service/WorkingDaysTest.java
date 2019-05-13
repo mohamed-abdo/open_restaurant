@@ -1,16 +1,14 @@
-package domain;
+package domain.service;
 
+import domain.service.WorkingDays;
+import domain.service.WorkingHours;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
