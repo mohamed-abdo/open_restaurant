@@ -14,8 +14,6 @@ import java.util.stream.IntStream;
 public class WorkingDays {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingDays.class);
 
-
-
     public DayOfWeek parseDayString(@NonNull String dayOfWeek) {
         Objects.requireNonNull(dayOfWeek);
         switch (dayOfWeek.trim().toLowerCase()) {

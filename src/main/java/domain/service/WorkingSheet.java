@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class WorkingSheet {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingSheet.class);
-    private static final String DAYS_PATTERN = "^\\s*\\D{3}(-\\s*\\D{3})?\\s*(,\\s*\\D{3})?";
+    private static final String DAYS_PATTERN = "(^\\D{3}-\\D{3}\\s*(,\\s*\\D{3})?)|(^\\s*\\D{3}(-\\s*\\D{3})?\\s*(,\\s*\\D{3})?)";
 
     @Autowired
     private WorkingDays workingDays;
