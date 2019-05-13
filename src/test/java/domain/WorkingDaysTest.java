@@ -66,8 +66,8 @@ class WorkingDaysTest {
     void test_parseWorkingDaysAndTime() {
         String workingSheetStr = "Mon-Mon, Sun 11:30 am - 10 pm ";
         var workingSheet = new HashMap<DayOfWeek, Duration>();
-        workingSheet.put(DayOfWeek.MONDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(21, 0)));
-        workingSheet.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(21, 0)));
+        workingSheet.put(DayOfWeek.MONDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(22, 0)));
+        workingSheet.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(22, 0)));
         assertEquals(workingSheet, workingDays.parseWorkingDaysAndTimeSheet(workingSheetStr));
     }
 }

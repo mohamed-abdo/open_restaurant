@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.util.*;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -66,7 +67,7 @@ public class WorkingDays {
     public Pair<DayOfWeek, DayOfWeek> extractPairs(@NonNull String daysPair) {
         Objects.requireNonNull(daysPair);
         var daysSplit = daysPair.split("-");
-        if (daysSplit.length == 1)
+        if (daysSplit.length != 2)
             throw new IllegalArgumentException("expected string contains '-' ");
         return Pair.of(parseDayString(daysSplit[0]), parseDayString(daysSplit[1]));
     }
@@ -89,10 +90,13 @@ public class WorkingDays {
 
     public Map<DayOfWeek, Duration> parseWorkingDaysAndTimeSheet(String workingSheetStr) {
         //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
-        var sheetSplit = Pattern.compile(DAYS_PATTERN).split(workingSheetStr.trim());
-        if (sheetSplit.length != 2)
-            throw new IllegalArgumentException("invalid input format.");
-        var duration = workingHours.calcWorkingHours(sheetSplit[1]);
-        return parseWorkingDaysSheet(sheetSplit[0]).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
+        var daysSheet = Pattern.compile(DAYS_PATTERN)
+                .matcher(workingSheetStr).results()
+                .map(MatchResult::group)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("invalid input format. $%s", workingSheetStr)));
+        String hoursSheet = workingSheetStr.replace(daysSheet, "");
+        var duration = workingHours.calcWorkingHours(hoursSheet);
+        return parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
     }
 }
