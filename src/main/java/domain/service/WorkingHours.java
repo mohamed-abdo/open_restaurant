@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -15,7 +16,7 @@ public class WorkingHours {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingHours.class);
     private final String timeFormat = "h[:m] a";//with optional minutes
 
-    public Duration calcWorkingHours(@NonNull String timeInStr) {
+    public Map.Entry<LocalTime, LocalTime> calcWorkingHours(@NonNull String timeInStr) {
         Objects.requireNonNull(timeInStr);
         String[] timeSplit = timeInStr.toUpperCase().split("-");//in case am | pm will be in CAPS
         if (timeSplit.length == 1)
@@ -27,8 +28,8 @@ public class WorkingHours {
         if (fromTimeSplit.length == 1)
             throw new IllegalArgumentException(String.format("invalid working hours format. %s", timeInStr));
 
-        return Duration.between(LocalTime.parse(fromTimeStr, DateTimeFormatter.ofPattern(timeFormat)),
-                LocalTime.parse(toTimeInStr, DateTimeFormatter.ofPattern(timeFormat)));
+        return new AbstractMap.SimpleEntry<>(LocalTime.parse(fromTimeStr, DateTimeFormatter.ofPattern(timeFormat)),
+                LocalTime.parse(toTimeInStr, DateTimeFormatter.ofPattern(timeFormat)).minusNanos(1L));
     }
 
 }

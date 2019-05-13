@@ -49,7 +49,6 @@ public class WorkingDays {
         IntStream.rangeClosed(fromDay, toDay)
                 .forEach(i -> {
                             initialSet.add(DayOfWeek.of(i));
-                            LOGGER.info("adding day of {}", DayOfWeek.of(i));
                         }
                 );
         return initialSet;

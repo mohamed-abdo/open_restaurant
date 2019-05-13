@@ -10,14 +10,16 @@ import org.springframework.stereotype.Service;
 import utils.CSVContent;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class RestaurantSrv {
+public class RestaurantSrv implements OpenRestaurant {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantSrv.class);
 
     @Autowired
@@ -25,7 +27,7 @@ public class RestaurantSrv {
 
     public Restaurant builder(@Nullable UUID id, @NonNull String[] dataRow) {
         //ex:Kyoto Sushi,Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm,,,
-        LOGGER.info("building restaurant object from raw data : {}", dataRow);
+        LOGGER.info("building restaurant object from raw data : {}", String.join(",", dataRow));
         Objects.requireNonNull(dataRow);
         if (dataRow.length < 2)
             LOGGER.error("invalid data format: {}", String.join(",", dataRow));
@@ -40,10 +42,37 @@ public class RestaurantSrv {
     }
 
     public List loadFromCSV(@NonNull String filePath) throws IOException {
+        LOGGER.info("loading data from file: {}", filePath);
+        Objects.requireNonNull(filePath);
         return CSVContent.getInstance(filePath)
                 .getFileContent()
                 .stream()
                 .map(dataRow -> this.builder(null, dataRow))
                 .collect(Collectors.toList());
+    }
+
+    public List findOpenRestaurant(@NonNull String filePath, @NonNull String dateTime) throws IOException {
+        Objects.requireNonNull(filePath);
+        Objects.requireNonNull(dateTime);
+        LOGGER.info("find open restaurant at file: {}, at dateTime {}", filePath, dateTime);
+        var data = this.loadFromCSV(filePath);
+        return findOpenRestaurant(data, LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
+    }
+
+    public List findOpenRestaurant(@NonNull String filePath, @NonNull LocalDateTime dateTime) throws IOException {
+        Objects.requireNonNull(filePath);
+        Objects.requireNonNull(dateTime);
+        LOGGER.info("find open restaurant at file: {}, at dateTime {}", filePath, dateTime.toString());
+        var data = this.loadFromCSV(filePath);
+        return findOpenRestaurant(data, dateTime);
+    }
+
+    public List findOpenRestaurantFromRawData(@NonNull List<String[]> rawData, @NonNull LocalDateTime dateTime) {
+        Objects.requireNonNull(rawData);
+        Objects.requireNonNull(dateTime);
+        LOGGER.info("find open restaurant from raw data, at dateTime {}", dateTime.toString());
+        var restaurants = rawData.stream().map(d -> this.builder(null, d))
+                .collect(Collectors.toList());
+        return findOpenRestaurant(restaurants, dateTime);
     }
 }

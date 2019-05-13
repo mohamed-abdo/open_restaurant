@@ -13,6 +13,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="OpenResturant" options="-parameters" />
       <module name="open_resturant" options="-parameters" />
     </option>
   </component>

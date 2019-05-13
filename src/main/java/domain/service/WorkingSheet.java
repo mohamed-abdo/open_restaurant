@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class WorkingSheet {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingSheet.class);
-    private static final String DAYS_PATTERN = "(^\\D{3}-\\D{3}\\s*(,\\s*\\D{3})?)|(^\\s*\\D{3}(-\\s*\\D{3})?\\s*(,\\s*\\D{3})?)";
+    private static final String DAYS_PATTERN = "(^\\D{3}\\s*,\\s*\\D{3}-\\s*\\D{3})|(^\\D{3}-\\D{3}\\s*(,\\s*\\D{3})?)|(^\\D{3}(-\\s*\\D{3})?\\s*(,\\s*\\D{3})?)";
 
     @Autowired
     private WorkingDays workingDays;
@@ -28,7 +28,7 @@ public class WorkingSheet {
     private WorkingHours workingHours;
 
 
-    private Map<DayOfWeek, Duration> innerParseWorkingSheet(@NonNull String workingSheetStr) {
+    private Map<DayOfWeek, Map.Entry<LocalTime, LocalTime>> innerParseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);
@@ -43,7 +43,7 @@ public class WorkingSheet {
         return workingDays.parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
     }
 
-    public Map<DayOfWeek, Duration> parseWorkingSheet(@NonNull String workingSheetStr) {
+    public Map<DayOfWeek, Map.Entry<LocalTime, LocalTime>> parseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);

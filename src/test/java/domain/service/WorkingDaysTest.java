@@ -1,9 +1,9 @@
 package domain.service;
 
-import domain.service.WorkingDays;
-import domain.service.WorkingHours;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -52,11 +52,11 @@ class WorkingDaysTest {
                 () -> workingDays.calcWorkingDays(DayOfWeek.THURSDAY, DayOfWeek.WEDNESDAY));
     }
 
-    @Test
-    void parseWorkingDays() {
-        String workingSheetStr = "Mon-Thu, Sun";
+    @ParameterizedTest
+    @ValueSource(strings = {"Mon-Thu, Sun", "Sun, Mon-Thu"})
+    void parseWorkingDays(String workingDaysStr) {
         var workingSheet = Set.of(DayOfWeek.MONDAY, DayOfWeek.THURSDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY);
-        assertEquals(workingSheet, workingDays.parseWorkingDaysSheet(workingSheetStr));
+        assertEquals(workingSheet, workingDays.parseWorkingDaysSheet(workingDaysStr));
     }
 
 

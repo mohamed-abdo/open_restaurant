@@ -12,7 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,23 +28,23 @@ class WorkingSheetTest {
     @Test
     void parseWorkingSheet() {
         String workingSheetStr = "Mon-Mon, Sun 11:30 am - 10 pm ";
-        var workingSheetMap = new HashMap<DayOfWeek, Duration>();
-        workingSheetMap.put(DayOfWeek.MONDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(22, 0)));
-        workingSheetMap.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(22, 0)));
+        var workingSheetMap = new HashMap<DayOfWeek, Map.Entry<LocalTime,LocalTime>>();
+        workingSheetMap.put(DayOfWeek.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(22, 0).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(22, 0).minusNanos(1L)));
         assertEquals(workingSheetMap, workingSheet.parseWorkingSheet(workingSheetStr));
     }
 
     @Test
     void parseWorkingSheet_Full() {
         String workingSheetStr = "Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm";
-        var workingSheetMap = new HashMap<DayOfWeek, Duration>();
-        workingSheetMap.put(DayOfWeek.MONDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.TUESDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.WEDNESDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.THURSDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.FRIDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(23, 0)));
-        workingSheetMap.put(DayOfWeek.SATURDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(23, 0)));
-        workingSheetMap.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(16, 30), LocalTime.of(22, 30)));
+        var workingSheetMap = new HashMap<DayOfWeek, Map.Entry<LocalTime,LocalTime>>();
+        workingSheetMap.put(DayOfWeek.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.TUESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.WEDNESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.THURSDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.FRIDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(23, 0).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.SATURDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(23, 0).minusNanos(1L)));
+        workingSheetMap.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(16, 30), LocalTime.of(22, 30).minusNanos(1L)));
         var result = workingSheet.parseWorkingSheet(workingSheetStr);
         assertEquals(workingSheetMap, result);
     }

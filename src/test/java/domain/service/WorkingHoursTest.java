@@ -11,6 +11,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.AbstractMap;
+import java.util.Map;
 
 @SpringBootTest(classes = {WorkingDays.class, WorkingHours.class})
 @ExtendWith(SpringExtension.class)
@@ -21,7 +23,7 @@ public class WorkingHoursTest {
 
     @Test
     void calcWorkingHours() {
-        var duration = Duration.between(LocalTime.of(11, 30), LocalTime.of(21, 00));
+        var duration = new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(21, 00).minusNanos(1L));
         Assertions.assertEquals(duration, workingHours.calcWorkingHours("11:30 am - 9 pm"));
     }
 }
