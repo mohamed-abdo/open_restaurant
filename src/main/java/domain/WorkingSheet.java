@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.MatchResult;
@@ -27,9 +29,10 @@ public class WorkingSheet {
 
 
     public Map<DayOfWeek, Duration> parseWorkingSheet(@NonNull String workingSheetStr) {
+        //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
+        LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);
         final var workingSheetTerm = workingSheetStr.trim();
-        //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
         var daysSheet = Pattern.compile(DAYS_PATTERN)
                 .matcher(workingSheetTerm).results()
                 .map(MatchResult::group)
@@ -38,5 +41,17 @@ public class WorkingSheet {
         String hoursSheet = workingSheetTerm.replace(daysSheet, "");
         var duration = workingHours.calcWorkingHours(hoursSheet);
         return workingDays.parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
+    }
+
+    public Map<DayOfWeek, Duration> parseWorkingFullSheet(@NonNull String workingSheetStr) {
+        //ex:"Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm";
+        LOGGER.info("parsing: {}", workingSheetStr);
+        Objects.requireNonNull(workingSheetStr);
+        return Arrays.stream(workingSheetStr.split("/"))
+                .map(this::parseWorkingSheet)
+                .reduce(new HashMap<>(), (a, b) -> {
+                    a.putAll(b);
+                    return a;
+                });
     }
 }

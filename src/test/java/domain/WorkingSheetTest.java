@@ -9,7 +9,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,12 +40,7 @@ class WorkingSheetTest {
         workingSheetMap.put(DayOfWeek.FRIDAY, Duration.between(LocalTime.of(11, 0), LocalTime.of(23, 0)));
         workingSheetMap.put(DayOfWeek.SATURDAY, Duration.between(LocalTime.of(11, 30), LocalTime.of(23, 0)));
         workingSheetMap.put(DayOfWeek.SUNDAY, Duration.between(LocalTime.of(16, 30), LocalTime.of(22, 30)));
-        var result = Arrays.stream(workingSheetStr.split("/"))
-                .map(sheet -> workingSheet.parseWorkingSheet(sheet))
-                .reduce(new HashMap<>(), (a, b) -> {
-                    a.putAll(b);
-                    return a;
-                });
+        var result = workingSheet.parseWorkingFullSheet(workingSheetStr);
         assertEquals(workingSheetMap, result);
     }
 }
