@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {RestaurantSrv.class, WorkingSheet.class, WorkingDays.class, WorkingHours.class})
+@SpringBootTest(classes = {RestaurantSrv.class, WorkingSheet.class, WorkingDays.class, WorkingHours.class, CSVContent.class})
 @ExtendWith(SpringExtension.class)
 class RestaurantSrvTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantSrvTest.class);
@@ -61,7 +61,7 @@ class RestaurantSrvTest {
     }
 
     @Test
-    void loadRestaurantData() {
+    void loadOneRestaurant() {
         List<String[]> csvData = new ArrayList<>() {{
             add("Kyoto Sushi,Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm,,,"
                     .split(","));
@@ -86,6 +86,15 @@ class RestaurantSrvTest {
         Assertions.assertNotNull(restaurants);
         Assertions.assertFalse(restaurants.stream().findAny().isEmpty());
         Assertions.assertEquals(restaurant.getId(), restaurants.stream().findAny().get().getId());
+        Assertions.assertEquals(restaurant.getName(), restaurants.stream().findAny().get().getName());
+    }
+
+    @Test
+    void loadRestaurantFromCSV() throws IOException {
+        var recordCount = 51;
+        var filePath = csvFile.getFile().getPath();
+        List restaurants = restaurantSrv.loadFromCSV(filePath);
+        Assertions.assertEquals(recordCount, restaurants.size());
     }
 
     @AfterAll

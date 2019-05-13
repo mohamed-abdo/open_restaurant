@@ -7,10 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import utils.CSVContent;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantSrv {
@@ -33,5 +37,13 @@ public class RestaurantSrv {
             LOGGER.error("invalid working sheet format: {}", workingSheetStr);
         var workingSheetMap = workingSheet.parseWorkingSheet(workingSheetStr);
         return new Restaurant(Optional.ofNullable(id).orElse(UUID.randomUUID()), restaurantName, workingSheetMap);
+    }
+
+    public List loadFromCSV(@NonNull String filePath) throws IOException {
+        return CSVContent.getInstance(filePath)
+                .getFileContent()
+                .stream()
+                .map(dataRow -> this.builder(null, dataRow))
+                .collect(Collectors.toList());
     }
 }
