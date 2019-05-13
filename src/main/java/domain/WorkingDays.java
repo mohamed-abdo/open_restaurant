@@ -18,10 +18,8 @@ import java.util.stream.IntStream;
 @Component
 public class WorkingDays {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkingDays.class);
-    private static final String DAYS_PATTERN = "^\\D{3}-\\D{3}\\s*(,\\s*\\D{3})?";
 
-    @Autowired
-    private WorkingHours workingHours;
+
 
     public DayOfWeek parseDayString(@NonNull String dayOfWeek) {
         Objects.requireNonNull(dayOfWeek);
@@ -88,15 +86,5 @@ public class WorkingDays {
     }
 
 
-    public Map<DayOfWeek, Duration> parseWorkingDaysAndTimeSheet(String workingSheetStr) {
-        //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
-        var daysSheet = Pattern.compile(DAYS_PATTERN)
-                .matcher(workingSheetStr).results()
-                .map(MatchResult::group)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("invalid input format. $%s", workingSheetStr)));
-        String hoursSheet = workingSheetStr.replace(daysSheet, "");
-        var duration = workingHours.calcWorkingHours(hoursSheet);
-        return parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
-    }
+
 }

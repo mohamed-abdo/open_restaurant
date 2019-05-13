@@ -12,7 +12,7 @@ import utils.CSVContent;
 
 import java.io.IOException;
 
-@SpringBootTest(classes = {RestaurantTest.class})
+@SpringBootTest(classes = {Restaurant.class})
 @ExtendWith(SpringExtension.class)
 class RestaurantTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantTest.class);
@@ -26,17 +26,17 @@ class RestaurantTest {
     }
 
     @BeforeAll
-    static void test_setup() {
+    static void setup() {
         LOGGER.info("starting unit test");
     }
 
     @BeforeEach
-    void test_beforeEach() {
+    void beforeEach() {
         Assertions.assertTrue(csvFile.exists());
     }
 
     @Test
-    void test_loadCSVFile() {
+    void loadCSVFile() {
         Assertions.assertNotNull(csvContent.getFileContent());
         LOGGER.info("printing file content");
         csvContent.getFileContent().forEach(line -> {
@@ -45,9 +45,8 @@ class RestaurantTest {
 
     }
 
-
     @AfterAll
-    static void test_finalize() {
+    static void cleanUp() {
         LOGGER.info("finishing unit test.");
     }
 }
