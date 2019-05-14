@@ -79,15 +79,15 @@ class RestaurantSrvTest {
         workingSheetMap.put(DayOfWeek.SATURDAY, Set.of(Pair.of(LocalTime.of(11, 30), LocalTime.of(23, 0))));
         workingSheetMap.put(DayOfWeek.SUNDAY, Set.of(Pair.of(LocalTime.of(16, 30), LocalTime.of(22, 30))));
 
-        var restaurant = new Restaurant(id, restaurantName, workingSheetMap);
+        var expected = new Restaurant(id, restaurantName, workingSheetMap);
 
-        List<Restaurant> restaurants = csvData.stream().parallel()
+        List<Restaurant> actual = csvData.stream().parallel()
                 .map(dataRow -> restaurantSrv.builder(id, dataRow))
                 .collect(Collectors.toList());
-        Assertions.assertNotNull(restaurants);
-        Assertions.assertFalse(restaurants.stream().findAny().isEmpty());
-        Assertions.assertEquals(restaurant.getId(), restaurants.stream().findAny().get().getId());
-        Assertions.assertEquals(restaurant.getName(), restaurants.stream().findAny().get().getName());
+        Assertions.assertNotNull(actual);
+        Assertions.assertFalse(actual.stream().findAny().isEmpty());
+        Assertions.assertEquals(expected.getId(), actual.stream().findAny().get().getId());
+        Assertions.assertEquals(expected.getName(), actual.stream().findAny().get().getName());
     }
 
     @Test
@@ -106,15 +106,15 @@ class RestaurantSrvTest {
         workingSheetMap.put(DayOfWeek.SATURDAY, Set.of(Pair.of(LocalTime.of(15, 0), LocalTime.of(1, 30))));
         workingSheetMap.put(DayOfWeek.SUNDAY, Set.of(Pair.of(LocalTime.of(15, 0), LocalTime.of(23, 30))));
 
-        var restaurant = new Restaurant(id, restaurantName, workingSheetMap);
+        var expected = new Restaurant(id, restaurantName, workingSheetMap);
 
-        List<Restaurant> restaurants = csvData.stream().parallel()
+        List<Restaurant> actual = csvData.stream().parallel()
                 .map(dataRow -> restaurantSrv.builder(id, dataRow))
                 .collect(Collectors.toList());
-        Assertions.assertNotNull(restaurants);
-        Assertions.assertFalse(restaurants.stream().findAny().isEmpty());
-        Assertions.assertEquals(restaurant.getId(), restaurants.stream().findAny().get().getId());
-        Assertions.assertEquals(restaurant.getName(), restaurants.stream().findAny().get().getName());
+        Assertions.assertNotNull(actual);
+        Assertions.assertFalse(actual.stream().findAny().isEmpty());
+        Assertions.assertEquals(expected.getId(), actual.stream().findAny().get().getId());
+        Assertions.assertEquals(expected.getName(), actual.stream().findAny().get().getName());
     }
 
     @Test
@@ -149,7 +149,7 @@ class RestaurantSrvTest {
     @ValueSource(strings = {"2019-05-12 11:50 PM", "2019-05-13 11:0 AM"})
     void findOpenRestaurantTestDateTime(String dateTime) throws IOException {
         var data = new ArrayList<String[]>() {{
-            add("Hanuri,Mon-Sun 11 am - 12 am,,,".split(","));
+            add("Hanuri,Mon-Sun 11 am - 1 am,,,".split(","));
         }};
 
         List restaurants = restaurantSrv.findOpenRestaurantFromRawData(data,
