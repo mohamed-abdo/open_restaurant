@@ -47,9 +47,8 @@ public class WorkingDays {
             throw new IllegalArgumentException("From day must be less than or equal to day");
         Set<DayOfWeek> initialSet = new HashSet<>();
         IntStream.rangeClosed(fromDay, toDay)
-                .forEach(i -> {
-                            initialSet.add(DayOfWeek.of(i));
-                        }
+                .forEach(i ->
+                        initialSet.add(DayOfWeek.of(i))
                 );
         return initialSet;
     }
@@ -70,13 +69,12 @@ public class WorkingDays {
                     if (!i.contains("-"))
                         i = String.format("%s-%s", i, i);
                     return extractPairs(i);
-                }).map(p -> calcWorkingDays(p.getLeft(), p.getRight()))
+                }).map(p -> calcWorkingDays(p.getKey(), p.getValue()))
                 .reduce(new HashSet<>(), (a, b) -> {
                     a.addAll(b);
                     return a;
                 });
     }
-
 
 
 }

@@ -17,9 +17,9 @@ public interface OpenRestaurant {
         return restaurants.stream().filter(r ->
                 r.getWorkingHours().containsKey(dayOfWeek) &&
                         r.getWorkingHours().values().stream()
-                                .anyMatch(t -> t.getKey().compareTo(time) <= 0 && t.getValue().compareTo(time) > 0))
+                                .anyMatch(t -> t.stream().
+                                        anyMatch(tt -> tt.getLeft().compareTo(time) <= 0 && tt.getRight().compareTo(time) > 0)))
                 .map(Restaurant::getName)
                 .collect(Collectors.toList());
     }
-
 }

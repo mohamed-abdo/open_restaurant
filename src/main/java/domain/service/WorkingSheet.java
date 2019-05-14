@@ -1,5 +1,6 @@
 package domain.service;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 public class WorkingSheet {
@@ -28,7 +25,7 @@ public class WorkingSheet {
     private WorkingHours workingHours;
 
 
-    private Map<DayOfWeek, Map.Entry<LocalTime, LocalTime>> innerParseWorkingSheet(@NonNull String workingSheetStr) {
+    private Map<DayOfWeek, Set<Pair<LocalTime, LocalTime>>> innerParseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Mon, Sun 11:30 am - 10 pm ";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);
@@ -39,11 +36,26 @@ public class WorkingSheet {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("invalid input format. %s", workingSheetTerm)));
         String hoursSheet = workingSheetTerm.replace(daysSheet, "");
-        var duration = workingHours.calcWorkingHours(hoursSheet);
-        return workingDays.parseWorkingDaysSheet(daysSheet).stream().collect(Collectors.toMap(dy -> dy, du -> duration));
+        var rawData = new HashMap<DayOfWeek, Set<Pair<LocalTime, LocalTime>>>();
+        workingDays.parseWorkingDaysSheet(daysSheet)
+                .stream()
+                .map(d -> workingHours.calcWorkingHours(d, hoursSheet))
+                .forEach(m -> {
+                    m.forEach((k, v) -> {
+                        if (rawData.containsKey(k)) {
+                            rawData.put(k, new HashSet<>() {{
+                                addAll(rawData.get(k));
+                                addAll(v);
+                            }});
+                        } else {
+                            rawData.put(k, v);
+                        }
+                    });
+                });
+        return rawData;
     }
 
-    public Map<DayOfWeek, Map.Entry<LocalTime, LocalTime>> parseWorkingSheet(@NonNull String workingSheetStr) {
+    public Map<DayOfWeek, Set<Pair<LocalTime, LocalTime>>> parseWorkingSheet(@NonNull String workingSheetStr) {
         //ex:"Mon-Thu 11 am - 10:30 pm  / Fri 11 am - 11 pm  / Sat 11:30 am - 11 pm  / Sun 4:30 pm - 10:30 pm";
         LOGGER.info("parsing: {}", workingSheetStr);
         Objects.requireNonNull(workingSheetStr);

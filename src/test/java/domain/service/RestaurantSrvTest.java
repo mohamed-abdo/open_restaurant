@@ -1,6 +1,7 @@
 package domain.service;
 
 import domain.model.Restaurant;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -69,14 +70,14 @@ class RestaurantSrvTest {
 
         var id = UUID.randomUUID();
         var restaurantName = "Kyoto Sushi";
-        var workingSheetMap = new HashMap<DayOfWeek, Map.Entry<LocalTime, LocalTime>>();
-        workingSheetMap.put(DayOfWeek.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.TUESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.WEDNESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.THURSDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(22, 30)));
-        workingSheetMap.put(DayOfWeek.FRIDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(23, 0)));
-        workingSheetMap.put(DayOfWeek.SATURDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(23, 0)));
-        workingSheetMap.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(16, 30), LocalTime.of(22, 30)));
+        var workingSheetMap = new HashMap<DayOfWeek, Set<Pair<LocalTime, LocalTime>>>();
+        workingSheetMap.put(DayOfWeek.MONDAY, Set.of(Pair.of(LocalTime.of(11, 0), LocalTime.of(22, 30))));
+        workingSheetMap.put(DayOfWeek.TUESDAY, Set.of(Pair.of(LocalTime.of(11, 0), LocalTime.of(22, 30))));
+        workingSheetMap.put(DayOfWeek.WEDNESDAY, Set.of(Pair.of(LocalTime.of(11, 0), LocalTime.of(22, 30))));
+        workingSheetMap.put(DayOfWeek.THURSDAY, Set.of(Pair.of(LocalTime.of(11, 0), LocalTime.of(22, 30))));
+        workingSheetMap.put(DayOfWeek.FRIDAY, Set.of(Pair.of(LocalTime.of(11, 0), LocalTime.of(23, 0))));
+        workingSheetMap.put(DayOfWeek.SATURDAY, Set.of(Pair.of(LocalTime.of(11, 30), LocalTime.of(23, 0))));
+        workingSheetMap.put(DayOfWeek.SUNDAY, Set.of(Pair.of(LocalTime.of(16, 30), LocalTime.of(22, 30))));
 
         var restaurant = new Restaurant(id, restaurantName, workingSheetMap);
 
@@ -90,22 +91,20 @@ class RestaurantSrvTest {
     }
 
     @Test
-    @Disabled
     void loadOneRestaurantOverNight() {
         List<String[]> csvData = new ArrayList<>() {{
             add("Sudachi,Mon-Wed 5 pm - 12:30 am  / Thu-Fri 5 pm - 1:30 am  / Sat 3 pm - 1:30 am  / Sun 3 pm - 11:30 pm,,,"
                     .split(","));
         }};
-
         var id = UUID.randomUUID();
         var restaurantName = "Sudachi";
-        var workingSheetMap = new HashMap<DayOfWeek, Map.Entry<LocalTime, LocalTime>>();
-        workingSheetMap.put(DayOfWeek.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(17, 0), LocalTime.of(0, 30)));
-        workingSheetMap.put(DayOfWeek.TUESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(17, 0), LocalTime.of(0, 30)));
-        workingSheetMap.put(DayOfWeek.WEDNESDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(17, 0), LocalTime.of(0, 30)));
-        workingSheetMap.put(DayOfWeek.THURSDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(17, 0), LocalTime.of(1, 30)));
-        workingSheetMap.put(DayOfWeek.SATURDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(15, 0), LocalTime.of(1, 30)));
-        workingSheetMap.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(15, 0), LocalTime.of(23, 30)));
+        var workingSheetMap = new HashMap<DayOfWeek, Set<Pair<LocalTime, LocalTime>>>();
+        workingSheetMap.put(DayOfWeek.MONDAY, Set.of(Pair.of(LocalTime.of(17, 0), LocalTime.of(0, 30))));
+        workingSheetMap.put(DayOfWeek.TUESDAY, Set.of(Pair.of(LocalTime.of(17, 0), LocalTime.of(0, 30))));
+        workingSheetMap.put(DayOfWeek.WEDNESDAY, Set.of(Pair.of(LocalTime.of(17, 0), LocalTime.of(0, 30))));
+        workingSheetMap.put(DayOfWeek.THURSDAY, Set.of(Pair.of(LocalTime.of(17, 0), LocalTime.of(1, 30))));
+        workingSheetMap.put(DayOfWeek.SATURDAY, Set.of(Pair.of(LocalTime.of(15, 0), LocalTime.of(1, 30))));
+        workingSheetMap.put(DayOfWeek.SUNDAY, Set.of(Pair.of(LocalTime.of(15, 0), LocalTime.of(23, 30))));
 
         var restaurant = new Restaurant(id, restaurantName, workingSheetMap);
 
