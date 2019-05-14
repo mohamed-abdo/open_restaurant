@@ -81,19 +81,25 @@ class RestaurantSrvTest {
 
         var expected = new Restaurant(id, restaurantName, workingSheetMap);
 
-        List<Restaurant> actual = csvData.stream().parallel()
+        List<Restaurant> data = csvData.stream().parallel()
                 .map(dataRow -> restaurantSrv.builder(id, dataRow))
                 .collect(Collectors.toList());
-        Assertions.assertNotNull(actual);
-        Assertions.assertFalse(actual.stream().findAny().isEmpty());
-        Assertions.assertEquals(expected.getId(), actual.stream().findAny().get().getId());
-        Assertions.assertEquals(expected.getName(), actual.stream().findAny().get().getName());
+        Assertions.assertNotNull(data);
+        Assertions.assertFalse(data.stream().findAny().isEmpty());
+        Assertions.assertEquals(expected.getId(), data.stream().findAny().get().getId());
+        Assertions.assertEquals(expected.getName(), data.stream().findAny().get().getName());
+
+        var actual = restaurantSrv.findOpenRestaurant(data, LocalDateTime.parse("2019-05-15 7:00 AM",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
+        Assertions.assertEquals(0, actual.size());
     }
 
     @Test
     void loadOneRestaurantOverNight() {
         List<String[]> csvData = new ArrayList<>() {{
             add("Sudachi,Mon-Wed 5 pm - 12:30 am  / Thu-Fri 5 pm - 1:30 am  / Sat 3 pm - 1:30 am  / Sun 3 pm - 11:30 pm,,,"
+                    .split(","));
+            add("Penang Garden,Mon-Thu 11 am - 10 pm  / Fri-Sat 10 am - 10:30 pm  / Sun 11 am - 11 pm,,,"
                     .split(","));
         }};
         var id = UUID.randomUUID();
@@ -108,13 +114,20 @@ class RestaurantSrvTest {
 
         var expected = new Restaurant(id, restaurantName, workingSheetMap);
 
-        List<Restaurant> actual = csvData.stream().parallel()
+        List<Restaurant> data = csvData
+                .stream()
+                .parallel()
                 .map(dataRow -> restaurantSrv.builder(id, dataRow))
                 .collect(Collectors.toList());
-        Assertions.assertNotNull(actual);
-        Assertions.assertFalse(actual.stream().findAny().isEmpty());
-        Assertions.assertEquals(expected.getId(), actual.stream().findAny().get().getId());
-        Assertions.assertEquals(expected.getName(), actual.stream().findAny().get().getName());
+
+        Assertions.assertNotNull(data);
+        Assertions.assertFalse(data.stream().findAny().isEmpty());
+        Assertions.assertEquals(expected.getId(), data.stream().findAny().get().getId());
+        Assertions.assertEquals(expected.getName(), data.stream().findAny().get().getName());
+
+        var actual = restaurantSrv.findOpenRestaurant(data, LocalDateTime.parse("2019-05-15 7:00 PM",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
+        Assertions.assertEquals(2, actual.size());
     }
 
     @Test

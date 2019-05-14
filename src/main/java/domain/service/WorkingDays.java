@@ -7,7 +7,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 @Component
@@ -40,9 +43,7 @@ public class WorkingDays {
     public Set<DayOfWeek> calcWorkingDays(@NonNull DayOfWeek dayFrom, @NonNull DayOfWeek dayTo) throws IllegalArgumentException {
         //ex Mon-Fri
         int fromDay = dayFrom.getValue();
-        LOGGER.info("adding day from idx {}", fromDay);
         int toDay = dayTo.getValue();
-        LOGGER.info("adding day to idx {}", toDay);
         if (fromDay > toDay)
             throw new IllegalArgumentException("From day must be less than or equal to day");
         Set<DayOfWeek> initialSet = new HashSet<>();
