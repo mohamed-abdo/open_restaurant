@@ -1,4 +1,4 @@
-package domain.service;
+package openRestaurant.domain.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -16,12 +16,12 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {WorkingSheet.class, WorkingDays.class, WorkingHours.class})
+@SpringBootTest(classes = {WorkingSheetSrvImpl.class, WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class})
 @ExtendWith(SpringExtension.class)
-class WorkingSheetTest {
+class WorkingSheetSrvImplTest {
 
     @Autowired
-    private WorkingSheet workingSheet;
+    private WorkingSheetSrvImpl workingSheetSrvImpl;
 
     @Test
     void parseWorkingSheet() {
@@ -29,7 +29,7 @@ class WorkingSheetTest {
         var expected = new HashMap<DayOfWeek, Map.Entry<LocalTime, LocalTime>>();
         expected.put(DayOfWeek.MONDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(22, 0).minusNanos(1L)));
         expected.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(22, 0).minusNanos(1L)));
-        var actual = workingSheet.parseWorkingSheet(workingSheetStr);
+        var actual = workingSheetSrvImpl.parseWorkingSheet(workingSheetStr);
         assertTrue(expected.keySet().stream().allMatch(actual::containsKey));
     }
 
@@ -44,7 +44,7 @@ class WorkingSheetTest {
                 Pair.of(LocalTime.of(0, 0), LocalTime.of(1, 0).minusNanos(1L))));
         expected.put(DayOfWeek.TUESDAY, Set.of(
                 Pair.of(LocalTime.of(0, 0), LocalTime.of(1, 0).minusNanos(1L))));
-        var actual = workingSheet.parseWorkingSheet(workingSheetStr);
+        var actual = workingSheetSrvImpl.parseWorkingSheet(workingSheetStr);
         assertTrue(expected.keySet().stream().allMatch(actual::containsKey));
     }
 
@@ -59,7 +59,7 @@ class WorkingSheetTest {
         expected.put(DayOfWeek.FRIDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 0), LocalTime.of(23, 0).minusNanos(1L)));
         expected.put(DayOfWeek.SATURDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(11, 30), LocalTime.of(23, 0).minusNanos(1L)));
         expected.put(DayOfWeek.SUNDAY, new AbstractMap.SimpleEntry<>(LocalTime.of(16, 30), LocalTime.of(22, 30).minusNanos(1L)));
-        var actual = workingSheet.parseWorkingSheet(workingSheetStr);
+        var actual = workingSheetSrvImpl.parseWorkingSheet(workingSheetStr);
         assertTrue(expected.keySet().stream().allMatch(actual::containsKey));
     }
 }

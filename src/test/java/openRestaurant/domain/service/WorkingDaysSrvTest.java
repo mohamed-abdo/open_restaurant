@@ -1,4 +1,4 @@
-package domain.service;
+package openRestaurant.domain.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,27 +14,27 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(classes = {WorkingDays.class, WorkingHours.class})
+@SpringBootTest(classes = {WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class})
 @ExtendWith(SpringExtension.class)
-class WorkingDaysTest {
+class WorkingDaysSrvTest {
 
     @Autowired
-    private WorkingDays workingDays;
+    private WorkingDaysSrv workingDaysSrv;
 
     @Test
     void parseDayString() {
-        assertEquals(DayOfWeek.SUNDAY, workingDays.parseDayString("sun"));
+        assertEquals(DayOfWeek.SUNDAY, workingDaysSrv.parseDayString("sun"));
     }
 
     @Test
     void parseDatString_CAPS() {
-        assertEquals((DayOfWeek.MONDAY), workingDays.parseDayString("MON"));
+        assertEquals((DayOfWeek.MONDAY), workingDaysSrv.parseDayString("MON"));
     }
 
     @Test
     void calcWorkingDays() {
         assertEquals(Set.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY),
-                workingDays.calcWorkingDays(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+                workingDaysSrv.calcWorkingDays(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
     }
 
     @Test
@@ -42,21 +42,21 @@ class WorkingDaysTest {
         assertEquals(
                 Set.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
                         DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY),
-                workingDays.calcWorkingDays(DayOfWeek.MONDAY, DayOfWeek.SUNDAY));
+                workingDaysSrv.calcWorkingDays(DayOfWeek.MONDAY, DayOfWeek.SUNDAY));
     }
 
     @Test
     void calcWorkingDays_THU_TO_WED() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> workingDays.calcWorkingDays(DayOfWeek.THURSDAY, DayOfWeek.WEDNESDAY));
+                () -> workingDaysSrv.calcWorkingDays(DayOfWeek.THURSDAY, DayOfWeek.WEDNESDAY));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"Mon-Thu, Sun", "Sun, Mon-Thu"})
     void parseWorkingDays(String workingDaysStr) {
         var workingSheet = Set.of(DayOfWeek.MONDAY, DayOfWeek.THURSDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.SUNDAY);
-        assertEquals(workingSheet, workingDays.parseWorkingDaysSheet(workingDaysStr));
+        assertEquals(workingSheet, workingDaysSrv.parseWorkingDaysSheet(workingDaysStr));
     }
 
 

@@ -1,10 +1,7 @@
-package domain.service;
+package openRestaurant.domain.service;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.util.Arrays;
@@ -13,11 +10,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-@Component
-public class WorkingDays {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkingDays.class);
+public interface WorkingDaysSrv {
 
-    public DayOfWeek parseDayString(@NonNull String dayOfWeek) {
+    default DayOfWeek parseDayString(@NonNull String dayOfWeek) {
         Objects.requireNonNull(dayOfWeek);
         switch (dayOfWeek.trim().toLowerCase()) {
             case "sat":
@@ -40,7 +35,7 @@ public class WorkingDays {
 
     }
 
-    public Set<DayOfWeek> calcWorkingDays(@NonNull DayOfWeek dayFrom, @NonNull DayOfWeek dayTo) throws IllegalArgumentException {
+    default Set<DayOfWeek> calcWorkingDays(@NonNull DayOfWeek dayFrom, @NonNull DayOfWeek dayTo) throws IllegalArgumentException {
         //ex Mon-Fri
         int fromDay = dayFrom.getValue();
         int toDay = dayTo.getValue();
@@ -54,7 +49,7 @@ public class WorkingDays {
         return initialSet;
     }
 
-    public Pair<DayOfWeek, DayOfWeek> extractPairs(@NonNull String daysPair) {
+    default Pair<DayOfWeek, DayOfWeek> extractPairs(@NonNull String daysPair) {
         Objects.requireNonNull(daysPair);
         var daysSplit = daysPair.split("-");
         if (daysSplit.length != 2)
@@ -62,7 +57,7 @@ public class WorkingDays {
         return Pair.of(parseDayString(daysSplit[0]), parseDayString(daysSplit[1]));
     }
 
-    public Set<DayOfWeek> parseWorkingDaysSheet(@NonNull String workingSheetStr) {
+    default Set<DayOfWeek> parseWorkingDaysSheet(@NonNull String workingSheetStr) {
         Objects.requireNonNull(workingSheetStr);
         // ex "Mon-Thu, Sun";
         return Arrays.stream(workingSheetStr.split(","))
@@ -76,6 +71,5 @@ public class WorkingDays {
                     return a;
                 });
     }
-
 
 }

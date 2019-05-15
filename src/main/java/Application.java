@@ -1,7 +1,4 @@
-import domain.service.RestaurantSrv;
-import domain.service.WorkingDays;
-import domain.service.WorkingHours;
-import domain.service.WorkingSheet;
+import openRestaurant.domain.service.OpenRestaurantSrvImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +17,15 @@ import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses = {RestaurantSrv.class, WorkingSheet.class, WorkingDays.class, WorkingHours.class, CSVContent.class})
+@ComponentScan(basePackages = {"openRestaurant.domain.*"}, basePackageClasses = {CSVContent.class})
 public class Application implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
 
-    private RestaurantSrv restaurantSrv;
+    private final OpenRestaurantSrvImpl openRestaurantSrvImpl;
 
-    public Application(@Autowired RestaurantSrv restaurantSrv) {
-        this.restaurantSrv = restaurantSrv;
+    public Application(@Autowired OpenRestaurantSrvImpl openRestaurantSrvImpl) {
+        this.openRestaurantSrvImpl = openRestaurantSrvImpl;
     }
 
     public static void main(String... args) {
@@ -59,7 +56,7 @@ public class Application implements CommandLineRunner {
 
         System.out.println("Open restaurants: ");
 
-        restaurantSrv.findOpenRestaurant(args[0], args[1]).forEach(r ->
+        openRestaurantSrvImpl.findOpenRestaurant(args[0], args[1]).forEach(r ->
                 System.out.println(r));
     }
 }

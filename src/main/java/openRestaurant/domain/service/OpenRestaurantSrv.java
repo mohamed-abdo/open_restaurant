@@ -1,6 +1,6 @@
-package domain.service;
+package openRestaurant.domain.service;
 
-import domain.model.Restaurant;
+import openRestaurant.domain.model.Restaurant;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public interface OpenRestaurant {
-    default List findOpenRestaurant(@NonNull List<Restaurant> restaurants, @NonNull LocalDateTime dateTime) {
+public interface OpenRestaurantSrv {
+    default List findOpenRestaurants(@NonNull List<Restaurant> restaurants, @NonNull LocalDateTime dateTime) {
         Objects.requireNonNull(restaurants);
         Objects.requireNonNull(dateTime);
         var dayOfWeek = dateTime.getDayOfWeek();

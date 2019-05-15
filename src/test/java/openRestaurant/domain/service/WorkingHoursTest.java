@@ -1,4 +1,4 @@
-package domain.service;
+package openRestaurant.domain.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -13,17 +13,17 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Set;
 
-@SpringBootTest(classes = {WorkingDays.class, WorkingHours.class})
+@SpringBootTest(classes = {WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class})
 @ExtendWith(SpringExtension.class)
 public class WorkingHoursTest {
 
     @Autowired
-    private WorkingHours workingHours;
+    private WorkingHoursSrv workingHoursSrv;
 
     @Test
     void calcWorkingHours() {
         var duration = new HashMap<DayOfWeek, Set<Pair<LocalTime, LocalTime>>>();
         duration.put(DayOfWeek.MONDAY, Set.of(Pair.of(LocalTime.of(11, 30), LocalTime.of(21, 00).minusNanos(1L))));
-        Assertions.assertEquals(duration, workingHours.calcWorkingHours(DayOfWeek.MONDAY, "11:30 am - 9 pm"));
+        Assertions.assertEquals(duration, workingHoursSrv.calcWorkingHours(DayOfWeek.MONDAY, "11:30 am - 9 pm"));
     }
 }

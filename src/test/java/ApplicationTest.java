@@ -1,7 +1,4 @@
-import domain.service.RestaurantSrv;
-import domain.service.WorkingDays;
-import domain.service.WorkingHours;
-import domain.service.WorkingSheet;
+import openRestaurant.domain.service.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import utils.CSVContent;
 
-@SpringBootTest(classes = {RestaurantSrv.class, WorkingSheet.class, WorkingDays.class, WorkingHours.class, CSVContent.class})
+@SpringBootTest(classes = {OpenRestaurantSrvImpl.class, WorkingSheetSrvImpl.class, WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class, CSVContent.class})
 @ExtendWith(SpringExtension.class)
 class ApplicationTest {
 
@@ -19,11 +16,11 @@ class ApplicationTest {
     private Resource csvFile;
 
     @Autowired
-    private RestaurantSrv restaurantSrv;
+    private OpenRestaurantSrvImpl openRestaurantSrvImpl;
 
     @Test
     void run() throws Exception {
-        Application application = new Application(restaurantSrv);
+        Application application = new Application(openRestaurantSrvImpl);
         var filePath = csvFile.getFile().getPath();
         var dateTime = "2019-05-15 1:00 AM";
         application.run(filePath, dateTime);

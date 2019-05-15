@@ -1,4 +1,4 @@
-package domain.model;
+package openRestaurant.domain.model;
 
 import org.apache.commons.lang3.tuple.Pair;
 

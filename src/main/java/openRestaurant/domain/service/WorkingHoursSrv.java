@@ -1,10 +1,7 @@
-package domain.service;
+package openRestaurant.domain.service;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -14,12 +11,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@Component
-public class WorkingHours {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkingHours.class);
-    private final String timeFormat = "h[:m] a";//with optional minutes
+public interface WorkingHoursSrv {
 
-    public Map<DayOfWeek, Set<Pair<LocalTime, LocalTime>>> calcWorkingHours(@NonNull DayOfWeek dayOfWeek, @NonNull String timeInStr) {
+    String timeFormat = "h[:m] a";//with optional minutes
+
+    default Map<DayOfWeek, Set<Pair<LocalTime, LocalTime>>> calcWorkingHours(@NonNull DayOfWeek dayOfWeek, @NonNull String timeInStr) {
         Objects.requireNonNull(timeInStr);
         String[] timeSplit = timeInStr.toUpperCase().split("-");//in case am | pm will be in CAPS
         if (timeSplit.length == 1)
@@ -39,5 +35,4 @@ public class WorkingHours {
         }
         return dayShifts;
     }
-
 }
