@@ -32,7 +32,6 @@ public interface WorkingDaysSrv {
             default:
                 throw new IllegalArgumentException(String.format("invalid input: %s", dayOfWeek));
         }
-
     }
 
     default Set<DayOfWeek> calcWorkingDays(@NonNull DayOfWeek dayFrom, @NonNull DayOfWeek dayTo) throws IllegalArgumentException {
