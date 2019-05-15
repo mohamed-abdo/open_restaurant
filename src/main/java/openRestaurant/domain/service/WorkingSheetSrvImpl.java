@@ -18,7 +18,6 @@ public class WorkingSheetSrvImpl implements WorkingSheetSrv {
         this.workingHoursSrv = workingHoursSrv;
     }
 
-
     @Override
     public WorkingDaysSrv getWorkingDaysSrv() {
         return this.workingDaysSrv;
