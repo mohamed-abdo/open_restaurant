@@ -1,8 +1,8 @@
 # open_resturant
 Open restaurant problem solution, given data in csv format, we need to find open restaurant(s) at a specified date &amp; time.
 
--Prerequisites:
-JDK 11
+> Prerequisites:
+- JDK 11
 
 # CSV data samples:
 
@@ -37,4 +37,4 @@ Restaurant-Name: {
 }
 ````
 # Execute:
-> Java -jar target/open-resturant-1.0-SNAPSHOT.jar  /{location}/target/test-classes/rest_hours.csv" csv" "2010-01-01 10:10 PM"
+> Java -jar target/open-resturant-1.0-SNAPSHOT.jar  /{location}/target/test-classes/rest_hours.csv" csv" "2019-01-01 10:10 PM"
