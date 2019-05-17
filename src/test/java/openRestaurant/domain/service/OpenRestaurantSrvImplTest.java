@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {OpenRestaurantSrvImpl.class, WorkingSheetSrvImpl.class, WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class, CSVContent.class})
+@SpringBootTest(classes = {OpenRestaurantSrvImpl.class, WorkingSheetSrvImpl.class, WorkingDaysSrvImpl.class, WorkingHoursSrvImpl.class})
 @ExtendWith(SpringExtension.class)
 class OpenRestaurantSrvImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenRestaurantSrvImplTest.class);
@@ -39,7 +39,7 @@ class OpenRestaurantSrvImplTest {
 
     public OpenRestaurantSrvImplTest(@Value("classpath:rest_hours.csv") Resource csvFile) throws IOException {
         this.csvFile = csvFile;
-        this.csvContent = CSVContent.getInstance(csvFile.getFile().getPath());
+        this.csvContent = CSVContent.getInstance(csvFile.getURI().getPath());
     }
 
     @BeforeAll
@@ -130,14 +130,14 @@ class OpenRestaurantSrvImplTest {
     @Test
     void loadRestaurantFromCSV() throws IOException {
         var recordCount = 51;
-        var filePath = csvFile.getFile().getPath();
+        var filePath = csvFile.getURI().getPath();
         List restaurants = openRestaurantSrvImpl.loadFromCSV(filePath);
         Assertions.assertEquals(recordCount, restaurants.size());
     }
 
     @Test
     void findOpenRestaurant() throws IOException {
-        var filePath = csvFile.getFile().getPath();
+        var filePath = csvFile.getURI().getPath();
         var dateTime = LocalDateTime.parse("2019-05-12 11:59 PM", DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a"));
         List restaurants = openRestaurantSrvImpl.findOpenRestaurant(filePath, dateTime);
         Assertions.assertTrue(restaurants.size() > 0);
@@ -150,7 +150,7 @@ class OpenRestaurantSrvImplTest {
             add(dataRow.split(","));
         }};
 
-        List restaurants = openRestaurantSrvImpl.findOpenRestaurantFromRawData(data,
+        List restaurants = openRestaurantSrvImpl.findOpenRestaurantsFromRawData(data,
                 LocalDateTime.parse("2019-05-12 11:50 PM", DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
         Assertions.assertTrue(restaurants.size() > 0);
     }
@@ -162,7 +162,7 @@ class OpenRestaurantSrvImplTest {
             add("Hanuri,Mon-Sun 11 am - 1 am,,,".split(","));
         }};
 
-        List restaurants = openRestaurantSrvImpl.findOpenRestaurantFromRawData(data,
+        List restaurants = openRestaurantSrvImpl.findOpenRestaurantsFromRawData(data,
                 LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
         Assertions.assertTrue(restaurants.size() > 0);
     }
@@ -174,7 +174,7 @@ class OpenRestaurantSrvImplTest {
             add("Hanuri,Mon-Sun 11 am - 11 pm,,,".split(","));
         }};
 
-        List restaurants = openRestaurantSrvImpl.findOpenRestaurantFromRawData(data,
+        List restaurants = openRestaurantSrvImpl.findOpenRestaurantsFromRawData(data,
                 LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")));
         Assertions.assertEquals(0, restaurants.size());
     }

@@ -51,7 +51,7 @@ public class OpenRestaurantSrvImpl implements OpenRestaurantSrv {
                 .collect(Collectors.toList());
     }
 
-    public List findOpenRestaurant(@NonNull String filePath, @NonNull String dateTime) throws IOException {
+    public List<Restaurant> findOpenRestaurant(@NonNull String filePath, @NonNull String dateTime) throws IOException {
         Objects.requireNonNull(filePath);
         Objects.requireNonNull(dateTime);
         LOGGER.info("find open restaurant at file: {}, at dateTime {}", filePath, dateTime);
@@ -67,7 +67,7 @@ public class OpenRestaurantSrvImpl implements OpenRestaurantSrv {
         return findOpenRestaurants(data, dateTime);
     }
 
-    public List findOpenRestaurantFromRawData(@NonNull List<String[]> rawData, @NonNull LocalDateTime dateTime) {
+    public List findOpenRestaurantsFromRawData(@NonNull List<String[]> rawData, @NonNull LocalDateTime dateTime) {
         Objects.requireNonNull(rawData);
         Objects.requireNonNull(dateTime);
         LOGGER.info("find open restaurant from raw data, at dateTime {}", dateTime.toString());

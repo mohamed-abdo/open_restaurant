@@ -21,7 +21,7 @@ class ApplicationTest {
     @Test
     void run() throws Exception {
         Application application = new Application(openRestaurantSrvImpl);
-        var filePath = csvFile.getFile().getPath();
+        var filePath = csvFile.getURI().getPath();
         var dateTime = "2019-05-15 1:00 AM";
         application.run(filePath, dateTime);
     }

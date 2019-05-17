@@ -1,4 +1,4 @@
-# open_resturant
+# open_restaurant
 Open restaurant problem solution, given data in csv format, we need to find open restaurant(s) at a specified date &amp; time.
 
 > Prerequisites:

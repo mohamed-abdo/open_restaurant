@@ -1,3 +1,4 @@
+import openRestaurant.domain.model.Restaurant;
 import openRestaurant.domain.service.OpenRestaurantSrvImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"openRestaurant.domain.*"}, basePackageClasses = {CSVContent.class})
+@ComponentScan(basePackages = {"openRestaurant.*"}, basePackageClasses = {CSVContent.class})
 public class Application implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
@@ -40,7 +41,10 @@ public class Application implements CommandLineRunner {
     public void run(@NonNull String... args) throws Exception {
         Objects.requireNonNull(args);
         LOGGER.info("executing command line with params: {}", String.join(", ", args));
-
+        if (args.length == 0) {
+            System.out.println("no parameters are provided, abort!");
+            return;
+        }
         if (!Files.exists(Paths.get(args[0]))) {
             System.out.println(String.format("file [%s] is not exists file, abort!", args[0]));
             return;
@@ -56,7 +60,9 @@ public class Application implements CommandLineRunner {
 
         System.out.println("Open restaurants: ");
 
-        openRestaurantSrvImpl.findOpenRestaurant(args[0], args[1]).forEach(r ->
-                System.out.println(r));
+        openRestaurantSrvImpl.findOpenRestaurant(args[0], args[1])
+                .stream()
+                .map(Restaurant::getName)
+                .forEach(System.out::println);
     }
 }
