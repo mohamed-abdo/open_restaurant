@@ -8,11 +8,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import utils.CSVContent;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,12 +32,17 @@ public class RestaurantController {
 
     @RequestMapping("/restaurants/{now}")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    @ExceptionHandler
-    public List<Restaurant> findOpenRestaurants(@Nullable @PathVariable String now) throws IOException {
+    public @ResponseBody
+    List<Restaurant> findOpenRestaurants(@Nullable @PathVariable String now) throws IOException {
         var content = CSVContent.getInstance(csvFile.getURI().getPath()).getFileContent();
         var param = Optional.ofNullable(now)
-                .map(n -> LocalDateTime.parse(n, DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a")))
+                .map(n -> {
+                    try {
+                        return LocalDateTime.parse(n, DateTimeFormatter.ofPattern("yyyy-MM-dd h:m a"));
+                    } catch (DateTimeParseException ex) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+                    }
+                })
                 .orElse(LocalDateTime.now());
         return openRestaurantSrv.findOpenRestaurantsFromRawData(content, param);
     }
